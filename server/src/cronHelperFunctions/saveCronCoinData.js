@@ -3,7 +3,7 @@ import { HistoryCoinModel } from "../models/history.model.js";
 import fetchTop10Coins from "../services/coingecko.js";
 
 const saveCoinCronData = async () => {
-  console.log("Cron: running hourly snapshot", new Date().toISOString());
+  console.log("Cron: running hourly snapshot", new Date().toLocaleString());
 
   try {
     const fetchCoins = await fetchTop10Coins();
@@ -15,7 +15,7 @@ const saveCoinCronData = async () => {
         name: coin.name,
         price: coin.current_price,
         marketCap: coin.market_cap,
-        priceChange: coin.price_change_percentage_24h,
+        priceChange24h: coin.price_change_percentage_24h,
         lastUpdated: new Date(coin.last_updated).toISOString(),
       };
     });
@@ -34,9 +34,6 @@ const saveCoinCronData = async () => {
     console.log("Cron coin data stored successfully");
   } catch (error) {
     console.log("Error storing cron coin data:", error);
-    return res
-      .status(500)
-      .send({ message: "Internal Server Error" + error.message });
   }
 };
 

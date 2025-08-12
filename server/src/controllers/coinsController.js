@@ -4,14 +4,25 @@ import fetchTop10Coins from "../services/coingecko.js";
 
 const getCoins = async (req, res) => {
   try {
-    const coins = await CurrentCoinModel.find()
-      .sort({ marketCap: -1 })
+    let { search = "", sortBy = "marketCap", order = "desc" } = req.query;
+
+    let filter = {};
+    if (search.trim()) {
+      filter = {
+        name: { $regex: search, $options: "i" },
+      };
+    }
+
+    const coins = await CurrentCoinModel.find(filter)
+      .sort({ [sortBy]: order })
       .limit(10);
 
     res.status(200).json(coins);
   } catch (error) {
     console.error("Error fetching coins:", error);
-    res.status(500).json({ message: "Internal Server Error" + error.message });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error: " + error.message });
   }
 };
 
@@ -26,7 +37,7 @@ const storeHistoryCoinData = async (req, res) => {
         name: coin.name,
         price: coin.current_price,
         marketCap: coin.market_cap,
-        priceChange: coin.price_change_percentage_24h,
+        priceChange24h: coin.price_change_percentage_24h,
         lastUpdated: new Date(coin.last_updated).toISOString(),
       };
     });
@@ -56,13 +67,13 @@ const storeHistoryCoinData = async (req, res) => {
 const findCoinById = async (req, res) => {
   try {
     const { coinId } = req.params;
-    const coinData = await HistoryCoinModel.findById({ coinId });
+    const coinData = await HistoryCoinModel.find({ coinId });
 
     if (!coinData) {
       return res.status(404).json({ message: "Coin not found" });
     }
 
-    return coinData;
+    return res.status(200).send(coinData);
   } catch (error) {
     console.error("Error finding coin by ID:", error);
     res.status(500).json({ message: "Internal Server Error" + error.message });
