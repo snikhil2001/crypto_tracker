@@ -4,7 +4,10 @@ import fetchTop10Coins from "../services/coingecko.js";
 
 const getCoins = async (req, res) => {
   try {
-    const coins = await fetchTop10Coins();
+    const coins = await CurrentCoinModel.find()
+      .sort({ marketCap: -1 })
+      .limit(10);
+
     res.status(200).json(coins);
   } catch (error) {
     console.error("Error fetching coins:", error);
