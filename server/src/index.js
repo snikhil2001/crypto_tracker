@@ -36,5 +36,5 @@ app.get("/api/history/:coinId", findCoinById);
 app.listen(process.env.PORT, async () => {
   await connectToMongoDB();
   console.log(`Server is running on port http://localhost:${process.env.PORT}`);
-  // coinDataSyncCron();
+  coinDataSyncCron();
 });

@@ -1,9 +1,8 @@
 import cron from "node-cron";
+import saveCoinCronData from "../cronHelperFunctions/saveCronCoinData.js";
 
 function coinDataSyncCron() {
-  cron.schedule("* * * * *", () => {
-    console.log("Cron: running hourly snapshot", new Date().toISOString());
-  });
+  cron.schedule("0 * * * *", saveCoinCronData);
 }
 
 export default coinDataSyncCron;
