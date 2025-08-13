@@ -39,7 +39,7 @@ Before running npm run dev make .env file and add these variables
 
 ```
 PORT = 8080
-MONGODB_URI = mongodb+srv://nikhilsahni2001:nikhilsahni2001@cluster0.kowwmoo.mongodb.net/coin_tracker
+MONGODB_URI = your mongodb atlas uri
 COINGECKO_API_URL = https://api.coingecko.com/api/v3/coins/markets
 ```
 
